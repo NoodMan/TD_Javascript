@@ -5,131 +5,80 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"
+        integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
     <title>TP Javascript</title>
 </head>
 
 <body>
-
     <div>
         <div>
-            <h1>Je vais sauvegarder un fichier sur mon serveur 😎</h1>
+            <h1>Je vais sauvegarder un fichier sur mon serveur 😎! </h1>
         </div>
-        <form action="#" method="POST" id="form-control">
+        <form action="#" method="POST" id="form_controller">
             <!-- # récupérer la valeur du champs à sa soumission-->
+            <div>
+                <input type="file" class="form-controller" name="_files" id="_files" multiple>
+                <!-- multiple permettra à l’utilisateur de sélectionner plusieurs fichiers -->
+            </div>
+            <div>
+                <input type="submit" value="Enregistrer">
+            </div>
+        </form>
     </div>
-    <input type="file" class="form-control" name="_files" id="_files" multiple>
-    <!-- multiple permettra à l’utilisateur de sélectionner plusieurs fichiers -->
-    <div>
-        <input type="submit" value="ENREGISTRER">
-    </div>
-    </form>
-
-
-</body>
-
-<script>
-    $("#form-control").on("submit", (e) => {
-        e.preventDefault();
-        fetchSaveFiles();
-    }) // (e)  contiendra toutes les données en rapport avec l'événement
-
-    var filesList = []; //création tableau vide 
-    var filesInput = document.getElementById('_files');
-    fileInput.addEventListener('change', function () { // ajouter un écouteur pour pouvoir exécuter des tâches dès que l’utilisateur modifiera le champ où l’on charge les fichiers
-        filesList = []
-        for (var i = 0; i < filesInput.files.lenght; i++) {
-            filesList.push(filesInput.files[i]);
-        }
-    })
-
-    function fetchSaveFiles() {
-        let authorized_format_file = [
-            "image/jpeg", // on indique le type de fichier autoriser 
-            "image/jng",
-        ];
-        if (filesList.length < 1) {
-            alert("Ajoutez une vidéo")
-            return false;
-        }
-
-
-        if (filesList.lenght > 3) {
-            alert("You can only upload a maximun of 3 files");
-            return false;
-        }
-
-        let isImageFile = true;
-        filesList.forEach(function (file) {
-            if (authorized_format_file.includes(file.type)) {
-                saveFiles(file);
-            } else {
-                alert("You can only upload .jpeg or jng files");
-                isImageFile = false;
-            }
-        });
-
-        return isImageFile;
-
-    }
-
-    function saveFiles(file) {
-        var formData = new FormDAta();
-        formData.set('file', file);
-        formData.set('file_name', file.name);
-        $.ajax({
-            url: '/run.php',
-            dataType: 'text',
-            cache: false,
-            contentType: false, //pas de restrictions 
-            processData: false, // pour afficher une page entiere en HTML
-            data: formData,
-            type: 'post',
+    <script>
+        $("#form_controller").on("submit", (e) => { // (e)  contiendra toutes les données en rapport avec l'événement
+            console.log("ok")
+            e.preventDefault();
+            fetchSaveFiles();
         })
-
-    }
-
-    $file = isset($_FILES['file']['tmp_name']) ? $_FILES['file']['tmp_name'] : '';
-    $reponses = ['error' => 'false'];
-    $file_name = $_POST['file_name'];
-
-    if (isset($_POST['file'])) {
-        if ($_POST['file'] === 'undefined') {
-            $reponses[] = 'nonewfiles';
-        }
-    }
-    function _addError() {
-        $reponses['error'] = 'true';
-        print json_encode($reponses);
-        exit;
-    }
-
-    if ($file !== '') {
-        if (0 < $_FILES['file']['error']) {
-            _addError();
-            $reponses[] = 'Erreur d\'upload';
-        } else {
-            $authorized_format_file = [
+        var fileList = [];
+        var fileInput = document.getElementById('_files');
+        fileInput.addEventListener('change', function () { // ajouter un écouteur pour pouvoir exécuter des tâches dès que l’utilisateur modifiera le champ où l’on charge les fichiers
+            fileList = []
+            for (var i = 0; i < fileInput.files.length; i++) {
+                fileList.push(fileInput.files[i]);
+            }
+        })
+        function fetchSaveFiles() {
+            let authorized_format_file = [
                 "image/jpeg",
-                "image/jng",
+                "image/jpg",
             ];
-            if (!in_array($_FILES['file']["type"], $authorized_format_file)) {
-                $reponses[] = 'Format invalide';
-                _addError();
+            if (fileList.length < 1) {
+                alert("Add a image")
+                return false;
             }
-            while (is_dir($folder_user = "vds_". ((string) rand(10000, 990000). '_'.time()))) {
-                $folder_user = "vds_". ((string) rand(10000, 990000). '_'.time());
+            if (fileList.length > 3) {
+                alert("You can only upload a maximum of 3 files");
+                return false;
             }
-
-            $create_dir = mkdir($folder_user, 0755);
-
-            if (move_uploaded_file($_files['file'][tmp_name], $folder_user. '/'.$file_name)) {
-                $reponses[] = 'Convert successfully';
-            } else {
-                $reponses[] = 'Convert with errors';
-            }
+            let isImageFile = true;
+            fileList.forEach(function (file) {
+                if (authorized_format_file.includes(file.type)) {
+                    saveFiles(file);
+                } else {
+                    alert("You can only upload .jpeg or .jpg files");
+                    isImageFile = false;
+                }
+            });
+            return isImageFile;
         }
-    }
-
-</script>
+        function saveFiles(file) {
+            var formData = new FormData();
+            formData.set('file', file);
+            formData.set('file_name', file.name);
+            $.ajax({
+                url: '/run.php',
+                dataType: 'text',
+                cache: false,
+                contentType: false, //pas de restrictions 
+                processData: false, // pour afficher une page entiere en HTML
+                date: formData,
+                type: 'post',
+            })
+        }
+    </script>
+</body>
 
 </html>
