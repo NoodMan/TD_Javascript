@@ -1,4 +1,4 @@
-<?php 
+<?php
 define( // creation de la constante
     'IS_AJAX',
     isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest'
@@ -20,9 +20,8 @@ $file_name      = $_POST['file_name'];
 // die('-->Je suis ici<--');
 
 if (isset($_POST['file'])) {
-  
+
     if ($_POST['file'] === 'undefined') {
-        
         $reponses[] = 'nonewfiles';
     }
 }
@@ -38,40 +37,34 @@ if ($file !== '') {
         ];
 
         if (!in_array($_FILES['file']["type"], $authorized_format_file)) {
-           
             $reponses[] = 'Format invalide';
             _addError();
         }
 
 
-        $folder_user = "vds_" . ((string) rand(10000, 90000) . '_' . time());
+        $folder_user = "img_" . ((string) rand(10000, 90000) . '_' . time());
 
         while (is_dir($folder_user)) {
-           
-            $folder_user = "vds_" . ((string) rand(10000, 90000) . '_' . time());
+            $folder_user = "img_" . ((string) rand(10000, 90000) . '_' . time());
         }
 
         $create_dir = mkdir($folder_user, 0755); // 7 utilisateur du site 5 les visiteurs du site 
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $folder_user . '/' . $file_name)) {
-           
             $reponses[] = 'Convert successfully';
         } else {
-            
             $reponses[] = 'Convert with errors';
         }
-
     }
 }
 
 if ($responses['error'] = 'false') {
-   
     unset($responses['error']);
 }
 
 print json_encode($reponses);
 
-function _addError() 
+function _addError()
 {
     $reponses['error'] = 'true';
     print json_encode($reponses);
