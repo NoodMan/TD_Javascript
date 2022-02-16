@@ -9,11 +9,11 @@ define( // creation de la constante
 
 
 if (!IS_AJAX) { // si faux 
-    die('Restricted acces');
+    die('Restricted access');
 }
 
 $file           = isset($_FILES['file']['tmp_name']) ? $_FILES['file']['tmp_name'] : '';
-$reponses       = ['error' => 'false'];
+$reponses       = ['error' => 'false']; // ???? prk ça fonctionne pas error lors de l'enregistrement de l'image
 $file_name      = $_POST['file_name'];
 
 // var_dump($_POST);

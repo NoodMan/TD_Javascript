@@ -15,10 +15,10 @@
         <div>
             <h1>Je vais sauvegarder un fichier sur mon serveur 😎! </h1>
         </div>
-        <form action="#" method="POST" id="form_controller">
+        <form action="#" method="POST" id="form-control">
             <!-- # récupérer la valeur du champs à sa soumission-->
             <div>
-                <input type="file" class="form-controller" name="_files" id="_files" multiple>
+                <input type="file" class="form-control" name="_files" id="_files" multiple>
                 <!-- multiple permettra à l’utilisateur de sélectionner plusieurs fichiers -->
             </div>
             <div>
@@ -27,7 +27,7 @@
         </form>
     </div>
     <script>
-        $("#form_controller").on("submit", (e) => { // (e)  contiendra toutes les données en rapport avec l'événement
+        $("#form-control").on("submit", (e) => { // (e)  contiendra toutes les données en rapport avec l'événement
             console.log("ok")
             e.preventDefault();
             fetchSaveFiles();
@@ -42,7 +42,7 @@
         })
         function fetchSaveFiles() {
             let authorized_format_file = [
-                "image/jpeg",
+                "image/jpeg", // on indique le type de fichier autoriser 
                 "image/jpg",
             ];
             if (fileList.length < 1) {
