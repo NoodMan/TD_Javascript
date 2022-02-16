@@ -59,7 +59,7 @@ if ($file !== '') {
 }
 
 if ($responses['error'] = 'false') {
-    unset($responses['error']);
+    unset($reponses['error']);
 }
 
 print json_encode($reponses);
