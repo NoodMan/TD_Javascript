@@ -54,10 +54,10 @@ if ($file !== '') {
         }
 
 
-        $folder_user = "img_" . ((string) rand(10000, 90000) . '_' . time());
+        $folder_user = "img_" . ((string) rand(10000, 990000) . '_' . time()); 
 
         while (is_dir($folder_user)) {
-            $folder_user = "img_" . ((string) rand(10000, 90000) . '_' . time());
+          // $folder_user pas besoin repetition   
         }
 
         $create_dir = mkdir($folder_user, 0755); // 7 utilisateur du site 5 les visiteurs du site 
@@ -75,5 +75,11 @@ if ($reponses['error'] = 'false') {
 }
 
 print json_encode($reponses);
+
+
+
+
+
+ 
 
 
