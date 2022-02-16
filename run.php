@@ -8,16 +8,17 @@ define( // creation de la constante
 // die('-->Je suis ici<--');
 
 
+
 if (!IS_AJAX) { // si faux 
     die('Restricted access');
 }
-
-$file           = isset($_FILES['file']['tmp_name']) ? $_FILES['file']['tmp_name'] : '';
-$reponses       = ['error' => 'false']; // ???? prk ça fonctionne pas error lors de l'enregistrement de l'image
-$file_name      = $_POST['file_name'];
-
 // var_dump($_POST);
 // die('-->Je suis ici<--');
+
+$file           = isset($_FILES['file']['tmp_name']) ? $_FILES['file']['tmp_name'] : '';
+$reponses       = ['error' => 'false']; 
+$file_name      = $_POST['file_name'];
+
 
 if (isset($_POST['file'])) {
 
@@ -26,18 +27,29 @@ if (isset($_POST['file'])) {
     }
 }
 
+
+
+function _addError()
+{
+    $reponses['error'] = 'true';
+    print json_encode($reponses);
+    exit;
+} 
+
+
 if ($file !== '') {
     if (0 < $_FILES['file']['error']) {
         _addError();
-        $reponses[] = 'Erreur d\'upload';
+        $reponses[] = 'Erreur d\'upload ‼️';
     } else {
         $authorized_format_file = [
             "image/jpeg", // on indique le type de fichier autoriser 
             "image/jpg",
+            "image/png",
         ];
 
         if (!in_array($_FILES['file']["type"], $authorized_format_file)) {
-            $reponses[] = 'Format invalide';
+            $reponses[] = 'Format invalide 🚫';
             _addError();
         }
 
@@ -50,23 +62,18 @@ if ($file !== '') {
 
         $create_dir = mkdir($folder_user, 0755); // 7 utilisateur du site 5 les visiteurs du site 
 
-        if (move_uploaded_file($_FILES['file']['tmp_name'], $folder_user . '/' . $file_name)) {
-            $reponses[] = 'Convert successfully';
+        if (move_uploaded_file($_FILES['file']['tmp_name'], $folder_user . '/' . $file_name)) { // si on veux un autre chemin modifier '/'
+            $reponses[] = 'Convert successfully 💪🏼';
         } else {
-            $reponses[] = 'Convert with errors';
+            $reponses[] = 'Convert with errors 😞';
         }
     }
 }
 
-if ($responses['error'] = 'false') {
+if ($reponses['error'] = 'false') {
     unset($reponses['error']);
 }
 
 print json_encode($reponses);
 
-function _addError()
-{
-    $reponses['error'] = 'true';
-    print json_encode($reponses);
-    exit;
-}
+
