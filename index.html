@@ -32,7 +32,7 @@
                 </div>
                 <div>
                     &nbsp;
-                    <div class="d-flex justify-content-center" type="submit role=" status">
+                    <div class="d-flex justify-content-center" type="submit" role="status">
                         <button class="btn btn-danger" type="submit">
                             <span class="d-none spinner-border spinner-border-sm" role="status"
                                 aria-hidden="true"></span>
@@ -46,16 +46,17 @@
 
         <script>
             $("#form-control").on("submit", (e) => { // (e)  contiendra toutes les données en rapport avec l'événement
-                console.log("ok")
+                // console.log("ok")
                 e.preventDefault();
                 fetchSaveFiles();
+                
             })
             var fileList = [];
             var fileInput = document.getElementById('_files');
             fileInput.addEventListener('change', function () { // ajoute un écouteur pour pouvoir exécuter des tâches dès que l’utilisateur modifiera le champ où l’on charge les fichiers
-                fileList = []
+                fileList = []  //création tableau vide 
                 for (var i = 0; i < fileInput.files.length; i++) {
-                    fileList.push(fileInput.files[i]);
+                    fileList.push(fileInput.files[i]); // push le tableau de fichier
                 }
             })
 
@@ -66,19 +67,19 @@
                     "image/png",
                 ];
                 if (fileList.length < 1) {
-                    alert("Add a image")
+                    alert("Add a image please...")
                     return false;
                 }
                 if (fileList.length > 3) {
-                    alert("You can only upload a maximum of 3 files");
+                    alert("You can only upload a maximum of 3 files, thank!");
                     return false;
                 }
-                let isImageFile = true;
+                let isImageFile = true; 
                 fileList.forEach(function (file) {
                     if (authorized_format_file.includes(file.type)) {
                         saveFiles(file);
                     } else {
-                        alert("You can only upload .png .jpeg or .jpg files");
+                        alert("You can only upload .png .jpeg or .jpg files, thank...");
                         isImageFile = false;
                     }
                 });
@@ -86,31 +87,28 @@
             }
 
             function saveFiles(file) { // lancement de la requete 
-                var formData = new FormData();
+                var formData = new FormData(); // objet pret pour l'exploitation clé/valeur
                 formData.set('file', file);
                 formData.set('file_name', file.name);
-                // var_dump();
-                // die('-->Je suis ici<--');
-
-                $.ajax({
-                    
-                    url: '/run.php',
-                    dataType: 'text',
-                    cache: false,
+                
+                $.ajax({ // $ represente Jquery   
+                    url: '/run.php', // comme action=""
+                    dataType: 'text', // type de donnée attendu en retour
+                    cache: false, // pas de mise en cache dans le navigateur 
                     contentType: false, //pas de restrictions 
                     processData: false, // pour afficher une page entiere en HTML
-                    data: formData,
-                    type: 'post',
+                    data: formData, // sauvegarde des données 
+                    type: 'POST',
                     success: function (response) { // fonction anonyme 
-                        response = JSON.parse(response);
+                        response = JSON.parse(response); //
                         if (response.error !== undefined) {
                             return false;
                         }
-                        let mon_message = response[0] ? response[0] : "";
+                        let mon_message = response[0] ? response[0] : ""; &nbsp;
                         let mon_message1 = response [1] ? response [1] : "";
                         let html =
                             `<div class="px-5">
-                        <span class="text_light">${mon_message + " " + mon_message1}</span>
+                        <span class="text_light">${mon_message + "  " + mon_message1}</span>
                             </div>`;
                         $("#form-control").append($(html));
                     },
