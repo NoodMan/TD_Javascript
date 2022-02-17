@@ -31,7 +31,7 @@
                     <!-- multiple permettra à l’utilisateur de sélectionner plusieurs fichiers -->
                 </div>
                 <div>
-        &nbsp;
+                    &nbsp;
                     <div class="d-flex justify-content-center" type="submit role=" status">
                         <button class="btn btn-danger" type="submit">
                             <span class="d-none spinner-border spinner-border-sm" role="status"
@@ -52,12 +52,13 @@
             })
             var fileList = [];
             var fileInput = document.getElementById('_files');
-            fileInput.addEventListener('change', function () { // ajouter un écouteur pour pouvoir exécuter des tâches dès que l’utilisateur modifiera le champ où l’on charge les fichiers
+            fileInput.addEventListener('change', function () { // ajoute un écouteur pour pouvoir exécuter des tâches dès que l’utilisateur modifiera le champ où l’on charge les fichiers
                 fileList = []
                 for (var i = 0; i < fileInput.files.length; i++) {
                     fileList.push(fileInput.files[i]);
                 }
             })
+
             function fetchSaveFiles() {
                 let authorized_format_file = [
                     "image/jpeg", // on indique le type de fichier autoriser 
@@ -84,7 +85,7 @@
                 return isImageFile;
             }
 
-            function saveFiles(file) {
+            function saveFiles(file) { // lancement de la requete 
                 var formData = new FormData();
                 formData.set('file', file);
                 formData.set('file_name', file.name);
@@ -92,6 +93,7 @@
                 // die('-->Je suis ici<--');
 
                 $.ajax({
+                    
                     url: '/run.php',
                     dataType: 'text',
                     cache: false,
@@ -99,15 +101,16 @@
                     processData: false, // pour afficher une page entiere en HTML
                     data: formData,
                     type: 'post',
-                    success: function (response) {
+                    success: function (response) { // fonction anonyme 
                         response = JSON.parse(response);
                         if (response.error !== undefined) {
                             return false;
                         }
                         let mon_message = response[0] ? response[0] : "";
+                        let mon_message1 = response [1] ? response [1] : "";
                         let html =
                             `<div class="px-5">
-                        <span class="text_light">${mon_message}</span>
+                        <span class="text_light">${mon_message + " " + mon_message1}</span>
                             </div>`;
                         $("#form-control").append($(html));
                     },
@@ -121,9 +124,11 @@
                 $('button').on('click', e => {
                     let spinner = $(e.currentTarget).find('span')
                     spinner.removeClass('d-none')
-                    setTimeout(_ => spinner.addClass('d-none'), 2000)
+                    setTimeout(_ => spinner.addClass('d-none'), 2500)
                 })
             })
+
+            
         </script>
 </body>
 

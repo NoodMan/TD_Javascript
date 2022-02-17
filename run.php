@@ -12,11 +12,12 @@ define( // creation de la constante
 if (!IS_AJAX) { // si faux 
     die('Restricted access');
 }
+
 // var_dump($_POST);
 // die('-->Je suis ici<--');
 
 $file           = isset($_FILES['file']['tmp_name']) ? $_FILES['file']['tmp_name'] : '';
-$reponses       = ['error' => 'false']; 
+$reponses       = ['error' => 'false'];
 $file_name      = $_POST['file_name'];
 
 
@@ -34,14 +35,14 @@ function _addError()
     $reponses['error'] = 'true';
     print json_encode($reponses);
     exit;
-} 
+}
 
 
 if ($file !== '') {
     if (0 < $_FILES['file']['error']) {
         _addError();
         $reponses[] = 'Erreur d\'upload ‼️';
-    } else {
+    } else { // transforme ça en ternaire... 
         $authorized_format_file = [
             "image/jpeg", // on indique le type de fichier autoriser 
             "image/jpg",
@@ -54,32 +55,31 @@ if ($file !== '') {
         }
 
 
-        $folder_user = "img_" . ((string) rand(10000, 990000) . '_' . time()); 
+        $folder_user = "img_" . ((string) rand(10000, 990000) . '_' . time());
 
-        while (is_dir($folder_user)) {
-          // $folder_user pas besoin repetition   
+        while (is_dir($folder_user)) { // is_dir indique si le fichier est un dossier
+            // $folder_user pas besoin repetition   
         }
 
         $create_dir = mkdir($folder_user, 0755); // 7 utilisateur du site 5 les visiteurs du site 
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $folder_user . '/' . $file_name)) { // si on veux un autre chemin modifier '/'
-            $reponses[] = 'Convert successfully 💪🏼';
-        } else {
+            $reponses[] = 'Convert successfully 💪🏼'; //premier cle 0
+            $command = escapeshellcmd('python3 mail.py');
+            $output = shell_exec($command);
+            echo $output;
+            $reponses[] = 'un mail de confirmation vous a été envoyer !!!'; // deuxieme clé 1
+
+        } else { // transforme ça en ternaire... 
             $reponses[] = 'Convert with errors 😞';
         }
     }
 }
+
+
 
 if ($reponses['error'] = 'false') {
     unset($reponses['error']);
 }
 
 print json_encode($reponses);
-
-
-
-
-
- 
-
-
